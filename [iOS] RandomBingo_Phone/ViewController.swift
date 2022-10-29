@@ -12,15 +12,19 @@ class ViewController: UIViewController {
     @IBOutlet var mainLabel: UILabel!
     @IBOutlet var numLabel: UILabel!
     
-    var comNum = Int.random(in: 0...10)
-    var myNum: Int = 0
+    var randomManager = RandomBingoManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        reset()
         
+    }
+    
+    func reset() {
         mainLabel.text = "선택하세요"
         numLabel.text = ""
-        
+        randomManager.resetNum()
     }
 
     @IBAction func numButton(_ sender: UIButton) {
@@ -28,24 +32,20 @@ class ViewController: UIViewController {
         numLabel.text = strNum
         
         guard let intNum = Int(strNum) else { return }
-        myNum = intNum
+        randomManager.setUserNum(num: intNum)
     }
     
     @IBAction func selectButton(_ sender: UIButton) {
-        if comNum > myNum {
-            mainLabel.text = "Up"
-        } else if comNum < myNum {
-            mainLabel.text = "Down"
-        } else {
-            mainLabel.text = "Bingo🌟"
-        }
+        guard let myNumStr = numLabel.text,
+              let myNum = Int(myNumStr) else { return }
+        
+        randomManager.setUserNum(num: myNum)
+        mainLabel.text = randomManager.getRandomResult()
+
     }
     
     @IBAction func resetButton(_ sender: UIButton) {
-        mainLabel.text = "선택하세요"
-        numLabel.text = ""
-        
-        comNum = Int.random(in: 0...10)
+        reset()
     }
     
 }
